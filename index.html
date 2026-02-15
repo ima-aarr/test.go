@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Tester Dashboard</title>
+    <style>
+        /* モダンでクリーンなUIデザイン */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .dashboard {
+            background: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #1a73e8;
+            font-size: 1.8rem;
+        }
+        p.description {
+            color: #5f6368;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #1557b0;
+        }
+        #result-container {
+            margin-top: 30px;
+            display: none; /* 初期状態は非表示 */
+        }
+        #console-output {
+            background-color: #202124;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <h1>🚀 Load Tester Dashboard</h1>
+        <p class="description">
+            ターゲットURLを設定し、Go言語で構築されたバックエンドエンジンに負荷テストの実行を指示します。
+        </p>
+
+        <div class="form-group">
+            <label for="target-url">ターゲットURL</label>
+            <input type="text" id="target-url" placeholder="https://example.com" required>
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1;">
+                <label for="concurrency">並行ワーカー数</label>
+                <input type="number" id="concurrency" value="100" min="1">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label for="duration">実行時間 (秒)</label>
+                <input type="number" id="duration" value="10" min="1">
+            </div>
+        </div>
+
+        <button onclick="runTest()">テストを実行する</button>
+
+        <div id="result-container">
+            <label>実行結果レポート (Console)</label>
+            <div id="console-output">待機中...</div>
+        </div>
+    </div>
+
+    <script>
+        // テスト実行ボタンが押されたときの処理
+        function runTest() {
+            const url = document.getElementById('target-url').value;
+            const concurrency = document.getElementById('concurrency').value;
+            const duration = document.getElementById('duration').value;
+            const resultContainer = document.getElementById('result-container');
+            const consoleOutput = document.getElementById('console-output');
+
+            if (!url) {
+                alert("ターゲットURLを入力してください。");
+                return;
+            }
+
+            // 結果画面を表示してローディング状態にする
+            resultContainer.style.display = 'block';
+            consoleOutput.style.color = '#fff';
+            consoleOutput.innerText = `[INFO] バックエンドエンジンに接続中...\nターゲット: ${url}\n並行数: ${concurrency}\n実行時間: ${duration}秒\n\n(※現在はUIプロトタイプのため、ここで実際のGo APIを呼び出します)`;
+
+            /* * 【今後の実装ステップ】
+             * ここに、前回作成したGoエンジン（をAPIサーバー化したもの）へ
+             * リクエストを送る処理 (fetch) を追加します。
+             * * 例:
+             * fetch('https://your-go-backend.com/api/run', {
+             * method: 'POST',
+             * headers: { 'Content-Type': 'application/json' },
+             * body: JSON.stringify({ url, concurrency, duration })
+             * })
+             * .then(response => response.json())
+             * .then(data => {
+             * consoleOutput.style.color = '#00ff00';
+             * consoleOutput.innerText = data.report;
+             * })
+             * .catch(error => {
+             * consoleOutput.style.color = '#ff4444';
+             * consoleOutput.innerText = "[ERROR] バックエンドに接続できませんでした。";
+             * });
+             */
+        }
+    </script>
+</body>
+</html>
